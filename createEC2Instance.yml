@@ -1,0 +1,27 @@
+---
+- name: Create Ec2 instances
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  # Block is a Group of Tasks combined together
+  - name: Create EC2 Block
+    block: 
+      - name: Launch ec2 instances
+        tags: create_ec2
+        ec2:
+          region: us-east-1
+          key_name: SpencerPython
+          group: app_sec_group
+          instance_type: t2.medium
+          image: ami-08c40ec9ead489470
+          wait: yes
+          wait_timeout: 500
+          count: 2
+          instance_tags:
+            name: appservers
+            os: ubuntu
+          monitoring: no
+          vpc_subnet_id: subnet-0618d3baa13c3358e
+          assign_public_ip: yes
+        register: ec2
+        delegate_to: localhost
